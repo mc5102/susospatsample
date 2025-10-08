@@ -251,7 +251,8 @@ modal_createshape_server <- function(id, shape_boundaries = reactive({ NULL }),
                            ## add label
                            area$label<-seq_along(st_geometry(area))
                          }
-                         areaName<-paste0(areaName, ".shp")
+                         # add number of sub-segments to boundary file names
+                         areaName<-paste0(areaName, "_", as.numeric(input$bound_segments) ,".shp")
                          # Transform to lat long
                          area<-area %>% st_transform(4326)
                          # Write to file
@@ -261,7 +262,8 @@ modal_createshape_server <- function(id, shape_boundaries = reactive({ NULL }),
                                         driver="ESRI Shapefile", quiet = T)
                          )
                        }
-                       fs<-c(fs, list.files(temp.dir, full.names = T, pattern = "(.dbf$)|(.tif$)|(.prj$)|(.shp$)|(.shx$)"))
+                       fs<-c(fs, list.files(temp.dir, full.names = T, 
+                                            pattern = "(.dbf$)|(.tif$)|(.prj$)|(.shp$)|(.shx$)"))
                        zfile<-tempfile("shapefordownload", fileext = ".zip")
                        zip::zip(zipfile=zfile, files=fs, mode = "cherry-pick")
                        # return file path for zip for download

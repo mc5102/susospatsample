@@ -3340,9 +3340,15 @@ main_server <- function(input, output, session) {
   )
   
   shapeNameForDownload <- reactive({
+    # add number of sub-segments
+    SUB<-as.character(input$`shapesfordwl-bound_segments`)
     SYT <- stringr::str_remove_all(Sys.time(), "([:punct:])|([:space:])")
     SEE <- sample_seed()
-    paste0(paste("Shapefiles", SYT, "seed", SEE, sep = "_"), ".zip")
+    if(is.null(SUB)){
+      paste0(paste("Shapefiles", SYT, "seed", SEE, sep = "_"), ".zip")
+    } else {
+      paste0(paste("Shapefiles", SYT, "seed", SEE, SUB, sep = "_"), ".zip")
+    }
   })
   zipFileDwl_server("shapeboundaries",
                     file_name = shapeNameForDownload,
